@@ -17,8 +17,10 @@ target/
 *.ipr
 
 ### resources
-!**/src/main/resources/**.yml
-!**/src/test/resources/**.yml
+**/src/main/resources/*.yml
+**/src/test/resources/*.yml
+
+service/service_user/src/main/resources/*.yml
 
 build/
 !**/src/main/**/build/
