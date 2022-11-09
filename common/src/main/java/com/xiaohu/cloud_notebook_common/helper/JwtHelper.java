@@ -12,12 +12,21 @@ import java.util.Date;
  */
 
 public class JwtHelper {
-    //过期时间 一天
+    /**
+     * 过期时间 一天
+     */
     private static long tokenExpiration = 24*60*60*1000;
-    //签名秘钥
-    private static String tokenSignKey = "123456";
+    /**
+     * 签名秘钥
+     */
+    private static String tokenSignKey = "xiaohu";
 
-    //根据参数生成token
+    /**
+     * 根据参数生成token
+     * @param userId
+     * @param account
+     * @return
+     */
     public static String createToken(Long userId, String account) {
         String token = Jwts.builder()
                 .setSubject("cloud-notebook")
@@ -30,7 +39,11 @@ public class JwtHelper {
         return token;
     }
 
-    //根据token字符串得到用户id
+    /**
+     * 根据token字符串得到用户id
+     * @param token
+     * @return
+     */
     public static Long getUserId(String token) {
         if(StringUtils.isEmpty(token)) {
             return null;
@@ -42,7 +55,11 @@ public class JwtHelper {
         return userId.longValue();
     }
 
-    //根据token字符串得到用户名称
+    /**
+     * 根据token字符串得到用户名称
+     * @param token
+     * @return
+     */
     public static String getUserName(String token) {
         if(StringUtils.isEmpty(token)) {
             return "";

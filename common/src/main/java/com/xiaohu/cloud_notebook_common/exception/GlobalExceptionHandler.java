@@ -1,6 +1,7 @@
 package com.xiaohu.cloud_notebook_common.exception;
 
 import com.xiaohu.cloud_notebook_common.result.Result;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @description
  */
 @ControllerAdvice
+@Component
 public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseBody
