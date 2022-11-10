@@ -14,7 +14,6 @@ import com.xiaohu.cloud_notebook.util.CodeGenerator;
 import com.xiaohu.cloud_notebook_common.exception.BusinessException;
 import com.xiaohu.cloud_notebook_common.helper.JwtHelper;
 import com.xiaohu.cloud_notebook_common.result.ResultCode;
-import com.xiaohu.cloud_notebook_common.util.Holder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,34 +69,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         if (user.getStatus() == 1){
             throw new BusinessException(ResultCode.FAIL, "账户异常，无法登录");
         }
-        // 6生成token令牌，将用户信息和token一并保存在redis, 并设置有效期。
-        String token = JwtHelper.createToken(user.getId(), phone);
-        // 6.1将User转换成Map
-        UserDto userDto = BeanUtil.copyProperties(user, UserDto.class);
-        /**
-         * 注意空指针异常
-         * 如果属性中有空属性，则会抛NPE,在设置ignoreNUll 依然会抛
-         * 是因为setFieldValueEditor（）优先级更高
-         * 解决方案：在加入之前进行判空
-         */
-        Map<String, Object> userMap = BeanUtil.beanToMap(userDto, new HashMap<>(),
-                CopyOptions.create()
-                        .setIgnoreNullValue(true)
-                        .setFieldValueEditor((fieldName, fieldValue) -> {
-                            if (fieldValue == null){
-                                fieldValue = "0";
-                            }else{
-                                fieldValue = fieldValue.toString();
-                            }
-                            return fieldValue;
-                        }));
-        // 6.2以hash的类型保存在redis
-        String tokenKey = LOGIN_USER_KEY + token;
-        stringRedisTemplate.opsForHash().putAll(tokenKey, userMap);
-        // 6.3设置有效期
-        stringRedisTemplate.expire(tokenKey, LOGIN_USER_TTL, TimeUnit.MINUTES);
-        // 返回token
-        return token;
+        return loginCommonWork(user, user.getPhone());
     }
 
     @Override
@@ -125,6 +97,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         if (userDto == null){
             throw new BusinessException(ResultCode.PARAMS_ERROR);
         }
+        String phone = userDto.getPhone();
+        if (StringUtils.isEmpty(phone)){
+            throw new BusinessException(ResultCode.PARAMS_ERROR, "手机号不存在");
+        }
+        // TODO 获取当前用户
         // 判断账号是否唯一
         String account = userDto.getAccount();
         if (accountIsExist(account)){
@@ -133,7 +110,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 将dto转换成user对象
         User user = BeanUtil.copyProperties(userDto, User.class);
         // 保存更新
-        boolean isSuccess = update(user, new QueryWrapper<User>());
+        boolean isSuccess = update(user, new QueryWrapper<User>().eq("phone", userDto.getPhone()));
         return isSuccess;
     }
 
@@ -159,6 +136,69 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 保存密码
         boolean isSuccess = update().set("password", encryptPassword).eq("account",account).update();
         return isSuccess;
+    }
+
+    @Override
+    public String loginByAccount(LoginUser loginUser) {
+        // 1 判空
+        if (loginUser == null){
+            throw new BusinessException(ResultCode.PARAMS_ERROR);
+        }
+        // 2. 判空
+        String account = loginUser.getAccount();
+        String password = loginUser.getPassword();
+        if (StringUtils.isAnyEmpty(account, password)){
+            throw new BusinessException(ResultCode.PARAMS_ERROR);
+        }
+        // 3. 查询账户
+        User user = getOne(new QueryWrapper<User>().eq("account", account));
+        if (user == null){
+            throw new BusinessException(ResultCode.PARAMS_ERROR, "该账号不存在");
+        }
+        // 4. 密码加密
+        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + password).getBytes());
+        // 5. 判断密码账号是否匹配
+        // 5.1 判断是否已经设置密码
+        if (StringUtils.isEmpty(user.getPassword())){
+            throw new BusinessException(ResultCode.PARAMS_ERROR, "账户未设置密码");
+        }
+        // 判断是否匹配
+        if (!encryptPassword.equals(user.getPassword())){
+            throw new BusinessException(ResultCode.PARAMS_ERROR, "密码输入错误");
+        }
+        // 6. 生成token,保存在redis,并设置有效期
+        return loginCommonWork(user, user.getAccount());
+    }
+
+    private String loginCommonWork(User user, String keyword){
+        // 6生成token令牌，将用户信息和token一并保存在redis, 并设置有效期。
+        String token = JwtHelper.createToken(user.getId(), keyword);
+        // 6.1将User转换成Map
+        UserDto userDto = BeanUtil.copyProperties(user, UserDto.class);
+        /**
+         * 注意空指针异常
+         * 如果属性中有空属性，则会抛NPE,在设置ignoreNUll 依然会抛
+         * 是因为setFieldValueEditor（）优先级更高
+         * 解决方案：在加入之前进行判空
+         */
+        Map<String, Object> userMap = BeanUtil.beanToMap(userDto, new HashMap<>(),
+                CopyOptions.create()
+                        .setIgnoreNullValue(true)
+                        .setFieldValueEditor((fieldName, fieldValue) -> {
+                            if (fieldValue == null){
+                                fieldValue = "0";
+                            }else{
+                                fieldValue = fieldValue.toString();
+                            }
+                            return fieldValue;
+                        }));
+        // 6.2以hash的类型保存在redis
+        String tokenKey = LOGIN_USER_KEY + token;
+        stringRedisTemplate.opsForHash().putAll(tokenKey, userMap);
+        // 6.3设置有效期
+        stringRedisTemplate.expire(tokenKey, LOGIN_USER_TTL, TimeUnit.MINUTES);
+        // 返回token
+        return token;
     }
 
     /**

@@ -39,4 +39,11 @@ public interface UserService extends IService<User> {
      * @return
      */
     boolean setPassword(LoginUser loginUser);
+
+    /**
+     * 通过账号密码登录
+     * @param loginUser
+     * @return
+     */
+    String loginByAccount(LoginUser loginUser);
 }

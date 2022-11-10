@@ -1,13 +1,9 @@
 package com.xiaohu.cloud_notebook.controller;
 
-import cn.hutool.core.bean.BeanUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.xiaohu.cloud_notebook.model.domain.User;
 import com.xiaohu.cloud_notebook.model.dto.UserDto;
 import com.xiaohu.cloud_notebook.model.vo.LoginUser;
 import com.xiaohu.cloud_notebook.service.UserService;
 import com.xiaohu.cloud_notebook_common.result.Result;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,15 +19,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-    /**
-     *
-     * @return
-     */
-    @GetMapping("/test")
-    public Result<String> test(){
-        return Result.success("hello world");
-    }
 
     @ApiOperation("通过账号设置密码")
     @PostMapping("set/password")
@@ -57,6 +44,13 @@ public class UserController {
     public Result<String> update(@RequestBody UserDto userDto){
         boolean isSuccess = userService.updateInfo(userDto);
         return isSuccess ? Result.success("修改成功") : Result.fail("");
+    }
+
+    @ApiOperation("用户账号登陆")
+    @PostMapping("/login/by/account")
+    public Result<String> loginByAccount(@RequestBody LoginUser loginUser){
+        String token = userService.loginByAccount(loginUser);
+        return Result.success(token);
     }
 
     /**
