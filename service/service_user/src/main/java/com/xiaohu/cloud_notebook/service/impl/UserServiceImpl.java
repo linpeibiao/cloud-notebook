@@ -170,6 +170,38 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return loginCommonWork(user, user.getAccount());
     }
 
+    @Override
+    public boolean register(LoginUser loginUser) {
+        // 判空
+        if (null == loginUser){
+            throw new BusinessException(ResultCode.PARAMS_ERROR, "账号密码不能为空");
+        }
+        String account = loginUser.getAccount();
+        String password = loginUser.getPassword();
+        if (StringUtils.isAnyEmpty(account, password)){
+            throw new BusinessException(ResultCode.PARAMS_ERROR, "有必要参数为空,请补全信息");
+        }
+        // 长度限制判断
+        if (account.length() > 16 || account.length() < 4){
+            throw new BusinessException(ResultCode.PARAMS_ERROR, "账号应为4-16个字符");
+        }
+        if (password.length() > 16 || password.length() < 8){
+            throw new BusinessException(ResultCode.PARAMS_ERROR, "密码应为8-16个字符");
+        }
+        // 账号应该唯一
+        if (accountIsExist(account)){
+            // 存在就不能添加
+            throw new BusinessException(ResultCode.PARAMS_ERROR, "该账号已存在");
+        }
+        // 密码加密
+        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + password).getBytes());
+        // 新建用户对象保存在数据库
+        User user = new User();
+        user.setAccount(account);
+        user.setPassword(encryptPassword);
+        return save(user);
+    }
+
     private String loginCommonWork(User user, String keyword){
         // 6生成token令牌，将用户信息和token一并保存在redis, 并设置有效期。
         String token = JwtHelper.createToken(user.getId(), keyword);

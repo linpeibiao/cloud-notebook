@@ -46,4 +46,11 @@ public interface UserService extends IService<User> {
      * @return
      */
     String loginByAccount(LoginUser loginUser);
+
+    /**
+     * 用户注册
+     * @param userDto
+     * @return
+     */
+    boolean register(LoginUser loginUser);
 }

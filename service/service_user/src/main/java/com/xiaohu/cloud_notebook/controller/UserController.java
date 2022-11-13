@@ -1,5 +1,6 @@
 package com.xiaohu.cloud_notebook.controller;
 
+import com.xiaohu.cloud_notebook.model.domain.User;
 import com.xiaohu.cloud_notebook.model.dto.UserDto;
 import com.xiaohu.cloud_notebook.model.vo.LoginUser;
 import com.xiaohu.cloud_notebook.service.UserService;
@@ -32,6 +33,16 @@ public class UserController {
     public Result<String> changePhone(@PathVariable("phone") String phone){
         // TODO
         return null;
+    }
+
+    @PostMapping("/register")
+    @ApiOperation("用户注册")
+    public Result<User> register(@RequestBody LoginUser loginUser){
+        boolean isSuccess = userService.register(loginUser);
+        if (!isSuccess){
+            return Result.fail();
+        }
+        return Result.success(loginUser.getAccount());
     }
 
     /**

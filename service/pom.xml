@@ -14,6 +14,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>service_user</module>
+        <module>service_note</module>
     </modules>
 
     <properties>
