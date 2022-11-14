@@ -36,8 +36,17 @@ import static com.xiaohu.cloud_notebook_common.constant.RedisConstant.*;
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     implements UserService{
+    /**
+     * 用户随机昵称前缀
+     */
     private static final String USER_NICKNAME_PREFIX = "note";
+    /**
+     * 用户随机账号前缀
+     */
     private static final String USER_ACCOUNT_PREFIX = "notebook";
+    /**
+     * 密码加密盐值
+     */
     private static final String SALT = "xiaohu";
 
     @Autowired

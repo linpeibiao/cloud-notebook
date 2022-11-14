@@ -5,6 +5,7 @@ import com.xiaohu.cloud_notebook.model.dto.UserDto;
 import com.xiaohu.cloud_notebook.model.vo.LoginUser;
 import com.xiaohu.cloud_notebook.service.UserService;
 import com.xiaohu.cloud_notebook_common.result.Result;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * @date 2022/11/09/ 0:12
  * @description
  */
+@Api(tags = "用户信息服务")
 @RestController
 @RequestMapping("/user")
 public class UserController {
