@@ -1,10 +1,9 @@
-package com.xiaohu.cloud_notebook.config;
+package com.xiaohu.cloud_notebook_common.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -14,8 +13,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @date 2022/11/14/ 22:55
  * @description 分页
  */
-//@EnableTransactionManagement
-//@Configuration
+@EnableTransactionManagement
+@Configuration
 public class MybatisPlusConfig {
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
