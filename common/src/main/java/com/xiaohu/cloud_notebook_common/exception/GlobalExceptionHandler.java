@@ -25,6 +25,6 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public Result error(BusinessException e) {
         e.printStackTrace();
-        return Result.fail();
+        return Result.fail(e.getDescription());
     }
 }
