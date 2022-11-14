@@ -132,7 +132,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         String account = loginUser.getAccount();
         String password = loginUser.getPassword();
         if (StringUtils.isAnyEmpty(account, password)){
-            throw new BusinessException(ResultCode.PARAMS_ERROR);
+            throw new BusinessException(ResultCode.PARAMS_ERROR, "账号密码不能为空");
         }
         // TODO 判断当前用户 判断用户是否存在
 //        User curUser = (User) Holder.get();
@@ -143,8 +143,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 密码加密
         String encryptPassword = DigestUtils.md5DigestAsHex((SALT + password).getBytes());
         // 保存密码
-        boolean isSuccess = update().set("password", encryptPassword).eq("account",account).update();
-        return isSuccess;
+        return update().set("password", encryptPassword).eq("account",account).update();
     }
 
     @Override

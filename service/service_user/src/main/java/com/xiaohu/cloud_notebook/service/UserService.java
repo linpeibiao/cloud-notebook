@@ -49,7 +49,7 @@ public interface UserService extends IService<User> {
 
     /**
      * 用户注册
-     * @param userDto
+     * @param loginUser
      * @return
      */
     boolean register(LoginUser loginUser);

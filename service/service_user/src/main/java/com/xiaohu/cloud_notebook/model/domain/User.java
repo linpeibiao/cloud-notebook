@@ -8,11 +8,16 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 /**
  * 
  * @TableName t_user
  */
+
+@EqualsAndHashCode(callSuper = false)
+@Accessors(chain = true)
 @TableName(value ="t_user")
 @Data
 public class User implements Serializable {
@@ -96,7 +101,7 @@ public class User implements Serializable {
     /**
      * 更新时间
      */
-    @TableField(value = "update_time", fill = FieldFill.INSERT)
+    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 
     /**

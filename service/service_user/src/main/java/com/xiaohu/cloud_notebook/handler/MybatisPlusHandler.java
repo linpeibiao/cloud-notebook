@@ -1,6 +1,7 @@
 package com.xiaohu.cloud_notebook.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 
@@ -9,9 +10,10 @@ import java.util.Date;
 /**
  * @author xiaohu
  * @date 2022/11/09/ 15:10
- * @description mp 处理器，设置自动插入四大件
+ * @description mp 处理器
  */
-@Component
+//@Component
+@Slf4j
 public class MybatisPlusHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
@@ -23,6 +25,7 @@ public class MybatisPlusHandler implements MetaObjectHandler {
 
     @Override
     public void updateFill(MetaObject metaObject) {
+        log.info("update handler------······");
         this.setFieldValByName("updateTime", new Date(), metaObject);
         // TODO 乐观锁自加 1
     }
