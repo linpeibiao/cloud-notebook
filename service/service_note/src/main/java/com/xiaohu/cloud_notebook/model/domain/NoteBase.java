@@ -1,11 +1,12 @@
 package com.xiaohu.cloud_notebook.model.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -47,9 +48,9 @@ public class NoteBase implements Serializable {
     private Integer status;
 
     /**
-     * 备用字段1
+     * 密码
      */
-    private String backup1;
+    private String password;
 
     /**
      * 备用字段2
@@ -64,21 +65,33 @@ public class NoteBase implements Serializable {
     /**
      * 逻辑删除
      */
-    private Integer isDeleted;
+    @JsonIgnore
+    @ApiModelProperty(value = "逻辑删除")
+    @TableField(value = "is_deleted", fill = FieldFill.INSERT)
+    @TableLogic
+    private Boolean deleted;
 
     /**
      * 创建时间
      */
+    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @JsonIgnore
     private Date createTime;
 
     /**
      * 更新时间
      */
+    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
+    @JsonIgnore
     private Date updateTime;
 
     /**
      * 乐观锁
      */
+    @Version
+    @JsonIgnore
+    @ApiModelProperty(value = "乐观锁")
+    @TableField(value = "version", fill = FieldFill.INSERT)
     private Integer version;
 
     @TableField(exist = false)

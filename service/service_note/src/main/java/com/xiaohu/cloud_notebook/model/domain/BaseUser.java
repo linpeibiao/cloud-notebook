@@ -1,11 +1,12 @@
 package com.xiaohu.cloud_notebook.model.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -44,16 +45,24 @@ public class BaseUser implements Serializable {
     /**
      * 创建时间
      */
+    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @JsonIgnore
     private Date createTime;
 
     /**
      * 更新时间
      */
+    @JsonIgnore
+    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 
     /**
      * 乐观锁
      */
+    @JsonIgnore
+    @ApiModelProperty(value = "乐观锁")
+    @TableField(value = "version", fill = FieldFill.INSERT)
+    @Version
     private Integer version;
 
     @TableField(exist = false)

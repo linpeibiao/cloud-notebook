@@ -16,6 +16,13 @@ import org.springframework.stereotype.Service;
 public class BaseUserServiceImpl extends ServiceImpl<BaseUserMapper, BaseUser>
     implements BaseUserService {
 
+    @Override
+    public boolean addRecord(Long noteBaseId, Long userId) {
+        BaseUser baseUser = new BaseUser();
+        baseUser.setUserId(userId);
+        baseUser.setNoteBaseId(noteBaseId);
+        return save(baseUser);
+    }
 }
 
 

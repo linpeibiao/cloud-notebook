@@ -11,10 +11,10 @@
             <result property="userNackname" column="user_nackname" jdbcType="VARCHAR"/>
             <result property="brief" column="brief" jdbcType="VARCHAR"/>
             <result property="status" column="status" jdbcType="TINYINT"/>
-            <result property="backup1" column="backup1" jdbcType="VARCHAR"/>
+            <result property="password" column="password" jdbcType="VARCHAR"/>
             <result property="backup2" column="backup2" jdbcType="VARCHAR"/>
             <result property="remark" column="remark" jdbcType="VARCHAR"/>
-            <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+            <result property="deleted" column="is_deleted" jdbcType="TINYINT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="version" column="version" jdbcType="INTEGER"/>
@@ -23,7 +23,7 @@
     <sql id="Base_Column_List">
         id,note_base_name,user_id,
         user_nackname,brief,status,
-        backup1,backup2,remark,
+        password,backup2,remark,
         is_deleted,create_time,update_time,
         version
     </sql>

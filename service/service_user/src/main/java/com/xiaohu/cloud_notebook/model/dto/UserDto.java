@@ -1,7 +1,5 @@
 package com.xiaohu.cloud_notebook.model.dto;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 /**
@@ -14,7 +12,6 @@ public class UserDto {
     /**
      * 主键
      */
-    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
@@ -61,4 +58,6 @@ public class UserDto {
      * 用户角色
      */
     private Integer role;
+
+    private String remark;
 }

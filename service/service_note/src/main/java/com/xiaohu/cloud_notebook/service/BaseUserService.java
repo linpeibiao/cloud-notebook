@@ -10,4 +10,11 @@ import com.xiaohu.cloud_notebook.model.domain.BaseUser;
 */
 public interface BaseUserService extends IService<BaseUser> {
 
+    /**
+     * 添加关系记录
+     * @param id
+     * @param userId
+     * @return
+     */
+    boolean addRecord(Long id, Long userId);
 }
