@@ -12,6 +12,7 @@ import lombok.Data;
 /**
  * 用户---知识库关系表
  * @TableName t_base_user
+ * @author xiaohu
  */
 @TableName(value ="t_base_user")
 @Data
@@ -19,7 +20,7 @@ public class BaseUser implements Serializable {
     /**
      * 主键id
      */
-    @TableId
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**

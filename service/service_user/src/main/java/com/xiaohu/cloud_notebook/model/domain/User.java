@@ -24,7 +24,7 @@ public class User implements Serializable {
     /**
      * 主键
      */
-    @TableId(type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
@@ -118,7 +118,7 @@ public class User implements Serializable {
      */
     @JsonIgnore
     @ApiModelProperty(value = "乐观锁")
-    @TableField(value = "version", fill = FieldFill.INSERT)
+    @TableField(value = "version", fill = FieldFill.INSERT_UPDATE)
     @Version
     private Integer version;
 
