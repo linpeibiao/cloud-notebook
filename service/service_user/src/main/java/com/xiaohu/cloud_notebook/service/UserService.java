@@ -2,7 +2,7 @@ package com.xiaohu.cloud_notebook.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.xiaohu.cloud_notebook.model.domain.User;
+import com.xiaohu.cloud_notebook_common.model.domain.User;
 import com.xiaohu.cloud_notebook.model.dto.UserDto;
 import com.xiaohu.cloud_notebook.model.vo.LoginUser;
 

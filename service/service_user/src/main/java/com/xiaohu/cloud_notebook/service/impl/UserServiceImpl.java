@@ -6,7 +6,7 @@ import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaohu.cloud_notebook.mapper.UserMapper;
-import com.xiaohu.cloud_notebook.model.domain.User;
+import com.xiaohu.cloud_notebook_common.model.domain.User;
 import com.xiaohu.cloud_notebook.model.dto.UserDto;
 import com.xiaohu.cloud_notebook.model.vo.LoginUser;
 import com.xiaohu.cloud_notebook.service.UserService;

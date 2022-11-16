@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xiaohu.cloud_notebook.mapper.UserMapper">
 
-    <resultMap id="BaseResultMap" type="com.xiaohu.cloud_notebook.model.domain.User">
+    <resultMap id="BaseResultMap" type="com.xiaohu.cloud_notebook_common.model.domain.User">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="account" column="account" jdbcType="VARCHAR"/>
             <result property="password" column="password" jdbcType="VARCHAR"/>

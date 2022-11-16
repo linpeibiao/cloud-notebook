@@ -1,4 +1,4 @@
-package com.xiaohu.cloud_notebook.model.domain;
+package com.xiaohu.cloud_notebook_common.model.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
 
@@ -14,6 +14,7 @@ import lombok.experimental.Accessors;
 /**
  * 
  * @TableName t_user
+ * @author xiaohu
  */
 
 @EqualsAndHashCode(callSuper = false)

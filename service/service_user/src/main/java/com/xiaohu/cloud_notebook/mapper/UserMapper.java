@@ -1,7 +1,7 @@
 package com.xiaohu.cloud_notebook.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.xiaohu.cloud_notebook.model.domain.User;
+import com.xiaohu.cloud_notebook_common.model.domain.User;
 
 /**
 * @author xiaohu
