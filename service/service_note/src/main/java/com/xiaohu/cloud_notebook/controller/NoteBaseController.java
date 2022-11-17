@@ -6,11 +6,14 @@ import com.xiaohu.cloud_notebook.model.dto.JoinNoteBaseDto;
 import com.xiaohu.cloud_notebook.model.dto.NoteBaseDto;
 import com.xiaohu.cloud_notebook.model.dto.NoteBaseInfoDto;
 import com.xiaohu.cloud_notebook.service.NoteBaseService;
+import com.xiaohu.cloud_notebook_common.model.domain.User;
 import com.xiaohu.cloud_notebook_common.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author xiaohu
@@ -105,7 +108,10 @@ public class NoteBaseController {
         return Result.success(page);
     }
 
-
-
-
+    @ApiOperation("获取知识库所有用户")
+    @PostMapping("/get/users/{noteBaseId}")
+    public Result<List<User>> getUsersOfNoteBase(@PathVariable("noteBaseId") Long noteBaseId){
+        List<User> userList = noteBaseService.getUsersOfNoteBase(noteBaseId);
+        return Result.success(userList);
+    }
 }

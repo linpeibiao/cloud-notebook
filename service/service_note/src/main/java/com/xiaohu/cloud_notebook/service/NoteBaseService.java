@@ -6,6 +6,9 @@ import com.xiaohu.cloud_notebook.model.domain.NoteBase;
 import com.xiaohu.cloud_notebook.model.dto.JoinNoteBaseDto;
 import com.xiaohu.cloud_notebook.model.dto.NoteBaseDto;
 import com.xiaohu.cloud_notebook.model.dto.NoteBaseInfoDto;
+import com.xiaohu.cloud_notebook_common.model.domain.User;
+
+import java.util.List;
 
 /**
 * @author xiaohu
@@ -73,4 +76,11 @@ public interface NoteBaseService extends IService<NoteBase> {
      * @return
      */
     IPage<NoteBase> getNoteBasePageByNoteBaseName(int pageNum, int pageSize, String noteBaseName);
+
+    /**
+     * 获取知识库所有用户
+     * @param noteBaseId
+     * @return
+     */
+    List<User> getUsersOfNoteBase(Long noteBaseId);
 }

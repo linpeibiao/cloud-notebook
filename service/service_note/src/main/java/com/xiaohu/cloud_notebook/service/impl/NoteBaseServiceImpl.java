@@ -1,5 +1,8 @@
 package com.xiaohu.cloud_notebook.service.impl;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -229,6 +232,21 @@ public class NoteBaseServiceImpl extends ServiceImpl<NoteBaseMapper, NoteBase>
                 new QueryWrapper<NoteBase>().
                         like("note_base_name", noteBaseName));
         return noteBases;
+    }
+
+    @Override
+    public List<User> getUsersOfNoteBase(Long noteBaseId) {
+        if (noteBaseId < 1){
+            throw new BusinessException(ResultCode.PARAMS_ERROR);
+        }
+        // 先从关系表查出用户 id 列表
+        List<BaseUser> baseUserList = baseUserService.list(new QueryWrapper<BaseUser>()
+                .eq("note_base_id", noteBaseId));
+        // 拿到用户id列表
+        List<Long> userIdList = baseUserList.stream().map(baseUser -> baseUser.getUserId()).collect(Collectors.toList());
+        // 通过列表查询用户列表
+        // TODO 需要使用 openfeign 调用 user 模块的接口
+        return null;
     }
 
     /**

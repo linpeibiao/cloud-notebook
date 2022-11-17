@@ -10,6 +10,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author xiaohu
  * @date 2022/11/09/ 0:12
@@ -24,14 +26,14 @@ public class UserController {
     private UserService userService;
 
     @ApiOperation("通过账号设置密码")
-    @PostMapping("set/password")
+    @PostMapping("/set/password")
     public Result<String> setPassword(@RequestBody LoginUser loginUser){
         boolean isSuccess = userService.setPassword(loginUser);
         return isSuccess ? Result.success("修改成功") : Result.fail("");
     }
 
     @ApiOperation("用户更改手机号")
-    @GetMapping("change/phone/{phone}")
+    @GetMapping("/change/phone/{phone}")
     public Result<String> changePhone(@PathVariable("phone") String phone){
         // TODO
         return null;
@@ -82,5 +84,12 @@ public class UserController {
     public Result<String> sendCode(@PathVariable("phone") String phone){
         userService.sendCode(phone);
         return Result.success("发送成功");
+    }
+
+    @ApiOperation("获取用户列表")
+    @PostMapping("/list/by/ids")
+    public Result<List<User>> getUserList(@RequestBody List<Long> userIdList){
+        List<User> userList = userService.listByIds(userIdList);
+        return Result.success(userList);
     }
 }
