@@ -1,5 +1,6 @@
 package com.xiaohu.cloud_notebook.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xiaohu.cloud_notebook.model.domain.NoteBase;
 import com.xiaohu.cloud_notebook.model.dto.JoinNoteBaseDto;
@@ -47,4 +48,29 @@ public interface NoteBaseService extends IService<NoteBase> {
      * @return
      */
     boolean exitNoteBase(Long noteBaseId);
+
+    /**
+     *
+     * @param noteBaseId
+     * @return
+     */
+    NoteBase getNoteBaseById(Long noteBaseId);
+
+    /**
+     * 分页获取某用户的所有知识库
+     * @param pageNum
+     * @param pageSize
+     * @param userId
+     * @return
+     */
+    IPage<NoteBase> getNoteBasePageByUserId(int pageNum, int pageSize, Long userId);
+
+    /**
+     * 分页模糊查询
+     * @param pageNum
+     * @param pageSize
+     * @param noteBaseName
+     * @return
+     */
+    IPage<NoteBase> getNoteBasePageByNoteBaseName(int pageNum, int pageSize, String noteBaseName);
 }

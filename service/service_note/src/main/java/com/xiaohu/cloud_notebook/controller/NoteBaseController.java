@@ -1,5 +1,7 @@
 package com.xiaohu.cloud_notebook.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.xiaohu.cloud_notebook.model.domain.NoteBase;
 import com.xiaohu.cloud_notebook.model.dto.JoinNoteBaseDto;
 import com.xiaohu.cloud_notebook.model.dto.NoteBaseDto;
 import com.xiaohu.cloud_notebook.model.dto.NoteBaseInfoDto;
@@ -71,5 +73,39 @@ public class NoteBaseController {
         boolean isSuccess = noteBaseService.exitNoteBase(noteBaseId);
         return isSuccess ? Result.success("退出成功") : Result.fail("");
     }
+
+    @ApiOperation("通过id获取知识库信息")
+    @PostMapping("/get/by/id/{noteBaseId}")
+    public Result<NoteBase> getNoteBaseById(@PathVariable("noteBaseId") Long noteBaseId){
+        NoteBase noteBase = noteBaseService.getNoteBaseById(noteBaseId);
+        return Result.success(noteBase);
+    }
+
+    @ApiOperation("分页获取用户知识库")
+    @PostMapping("/page/by/userId/{pageNum}/{pageSize}/{userId}")
+    public Result<IPage<NoteBase>> getNoteBasePageByUserId(@PathVariable("pageNum")int pageNum,
+                                                          @PathVariable("pageSize")int pageSize,
+                                                          @PathVariable("userId") Long userId){
+        if (pageNum <= 0 || pageSize <= 0){
+            return Result.fail("分页参数错误");
+        }
+        IPage<NoteBase> page = noteBaseService.getNoteBasePageByUserId(pageNum, pageSize, userId);
+        return Result.success(page);
+    }
+
+    @ApiOperation("分页模糊查询知识库")
+    @PostMapping("/page/by/note/base/name/{pageNum}/{pageSize}/{noteBaseName}")
+    public Result<IPage<NoteBase>> getNoteBasePageByNoteBaseName(@PathVariable("pageNum")int pageNum,
+                                                           @PathVariable("pageSize")int pageSize,
+                                                           @PathVariable("noteBaseName") String noteBaseName){
+        if (pageNum <= 0 || pageSize <= 0){
+            return Result.fail("分页参数错误");
+        }
+        IPage<NoteBase> page = noteBaseService.getNoteBasePageByNoteBaseName(pageNum, pageSize, noteBaseName);
+        return Result.success(page);
+    }
+
+
+
 
 }

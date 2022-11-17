@@ -3,6 +3,8 @@ import java.util.Date;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaohu.cloud_notebook.mapper.NoteBaseMapper;
 import com.xiaohu.cloud_notebook.model.domain.BaseUser;
@@ -197,6 +199,36 @@ public class NoteBaseServiceImpl extends ServiceImpl<NoteBaseMapper, NoteBase>
             // 否转让
             throw new BusinessException(ResultCode.NO_AUTH, "请转让知识库后退出");
         }
+    }
+
+    @Override
+    public NoteBase getNoteBaseById(Long noteBaseId) {
+        if (noteBaseId < 1){
+            throw new BusinessException(ResultCode.PARAMS_ERROR);
+        }
+        return getById(noteBaseId);
+    }
+
+    @Override
+    public IPage<NoteBase> getNoteBasePageByUserId(int pageNum, int pageSize, Long userId) {
+        if (userId == null || userId < 1){
+            throw new BusinessException(ResultCode.PARAMS_ERROR);
+        }
+        Page<NoteBase> noteBases = page(new Page<>(pageNum, pageSize),
+                new QueryWrapper<NoteBase>().
+                        eq("user_id", userId));
+        return noteBases;
+    }
+
+    @Override
+    public IPage<NoteBase> getNoteBasePageByNoteBaseName(int pageNum, int pageSize, String noteBaseName) {
+        if (StringUtils.isEmpty(noteBaseName)){
+            throw new BusinessException(ResultCode.PARAMS_ERROR);
+        }
+        Page<NoteBase> noteBases = page(new Page<>(pageNum, pageSize),
+                new QueryWrapper<NoteBase>().
+                        like("note_base_name", noteBaseName));
+        return noteBases;
     }
 
     /**
