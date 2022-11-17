@@ -2,6 +2,7 @@ package com.xiaohu.cloud_notebook.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xiaohu.cloud_notebook.model.domain.NoteBase;
+import com.xiaohu.cloud_notebook.model.dto.JoinNoteBaseDto;
 import com.xiaohu.cloud_notebook.model.dto.NoteBaseDto;
 import com.xiaohu.cloud_notebook.model.dto.NoteBaseInfoDto;
 
@@ -32,4 +33,11 @@ public interface NoteBaseService extends IService<NoteBase> {
      * @return
      */
     boolean transferTo(NoteBaseDto noteBaseDto, Long noteBaseId);
+
+    /**
+     * 加入知识库
+     * @param joinNoteBaseDto
+     * @return
+     */
+    boolean joinNoteBase(JoinNoteBaseDto joinNoteBaseDto);
 }

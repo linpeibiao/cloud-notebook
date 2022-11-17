@@ -1,6 +1,6 @@
 package com.xiaohu.cloud_notebook.controller;
 
-import com.xiaohu.cloud_notebook.model.domain.User;
+import com.xiaohu.cloud_notebook_common.model.domain.User;
 import com.xiaohu.cloud_notebook.model.dto.UserDto;
 import com.xiaohu.cloud_notebook.model.vo.LoginUser;
 import com.xiaohu.cloud_notebook.service.UserService;

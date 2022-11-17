@@ -1,5 +1,6 @@
 package com.xiaohu.cloud_notebook.controller;
 
+import com.xiaohu.cloud_notebook.model.dto.JoinNoteBaseDto;
 import com.xiaohu.cloud_notebook.model.dto.NoteBaseDto;
 import com.xiaohu.cloud_notebook.model.dto.NoteBaseInfoDto;
 import com.xiaohu.cloud_notebook.service.NoteBaseService;
@@ -45,6 +46,18 @@ public class NoteBaseController {
     public Result transferNoteBase(@RequestBody NoteBaseDto noteBaseDto, @PathVariable("noteBaseId") Long noteBaseId){
         boolean isSuccess = noteBaseService.transferTo(noteBaseDto, noteBaseId);
         return isSuccess ? Result.success("修改成功") : Result.fail("");
+    }
+
+    /**
+     * 加入知识库
+     * @param joinNoteBaseDto
+     * @return
+     */
+    @ApiOperation("用户加入知识库")
+    @PostMapping("/user/join")
+    public Result joinNoteBase(@RequestBody JoinNoteBaseDto joinNoteBaseDto){
+        boolean isSuccess = noteBaseService.joinNoteBase(joinNoteBaseDto);
+        return isSuccess ? Result.success("加入成功") : Result.fail("");
     }
 
 }

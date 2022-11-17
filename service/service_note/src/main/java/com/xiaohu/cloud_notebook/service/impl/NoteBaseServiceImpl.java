@@ -1,4 +1,5 @@
 package com.xiaohu.cloud_notebook.service.impl;
+import java.util.Date;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -6,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaohu.cloud_notebook.mapper.NoteBaseMapper;
 import com.xiaohu.cloud_notebook.model.domain.BaseUser;
 import com.xiaohu.cloud_notebook.model.domain.NoteBase;
+import com.xiaohu.cloud_notebook.model.dto.JoinNoteBaseDto;
 import com.xiaohu.cloud_notebook.model.dto.NoteBaseDto;
 import com.xiaohu.cloud_notebook.model.dto.NoteBaseInfoDto;
 import com.xiaohu.cloud_notebook.service.BaseUserService;
@@ -110,10 +112,7 @@ public class NoteBaseServiceImpl extends ServiceImpl<NoteBaseMapper, NoteBase>
 
         // 查看转让的用户是否在此知识库
         Long transferTo = noteBaseDto.getUserId();
-        long count = baseUserService.count(new QueryWrapper<BaseUser>()
-                .eq("user_id", transferTo)
-                .eq("note_base_id", noteBaseId));
-        if (count < 1){
+        if (!isJoin(transferTo, noteBaseId)){
             throw new BusinessException(ResultCode.NOT_FOUND, "该用户不在知识库中");
         }
 
@@ -121,6 +120,62 @@ public class NoteBaseServiceImpl extends ServiceImpl<NoteBaseMapper, NoteBase>
         noteBase.setUserId(transferTo);
         noteBase.setUserNackname(noteBaseDto.getUserNackName());
         return updateById(noteBase);
+    }
+
+    @Override
+    public boolean joinNoteBase(JoinNoteBaseDto joinNoteBaseDto) {
+        // 判空
+        if (joinNoteBaseDto == null){
+            throw new BusinessException(ResultCode.PARAMS_ERROR);
+        }
+        // TODO userId 可以从当前登录用户拿
+        long userId = joinNoteBaseDto.getUserId();
+        long noteBaseId = joinNoteBaseDto.getNoteBaseId();
+        if (userId < 1 || noteBaseId < 1){
+            throw new BusinessException(ResultCode.PARAMS_ERROR, "请求参数不合法");
+        }
+
+        // 判断知识库是否存在
+        NoteBase noteBase = getById(noteBaseId);
+        if (noteBase == null){
+            throw new BusinessException(ResultCode.NOT_FOUND, "该知识库不存在");
+        }
+        // 判断知识库状态
+        int status = noteBase.getStatus();
+        //   私密 无法加入
+        if (1 == status){
+            throw new BusinessException(ResultCode.NO_AUTH, "私密知识库无法加入");
+        }
+        //   加密 需要验证密码
+        if (2 == status){
+            if (!noteBase.getPassword().equals(joinNoteBaseDto.getPassword())){
+                throw new BusinessException(ResultCode.NO_AUTH, "密码输入不正确");
+            }
+        }
+
+        // 判断是否已经加入（不能重复加入）
+        if (isJoin(userId, noteBaseId)){
+            throw new BusinessException(ResultCode.PARAMS_ERROR, "已经加入");
+        }
+
+        BaseUser baseUser = new BaseUser();
+        baseUser.setNoteBaseId(noteBaseId);
+        baseUser.setUserId(userId);
+        return baseUserService.save(baseUser);
+    }
+
+    /**
+     * 判断用户是否已经加入知识库
+     * @param userId
+     * @param noteBaseId
+     * @return
+     */
+    private boolean isJoin(Long userId, Long noteBaseId){
+
+        long count = baseUserService.count(new QueryWrapper<BaseUser>()
+                .eq("user_id", userId)
+                .eq("note_base_id", noteBaseId));
+        return count > 0;
     }
 }
 
