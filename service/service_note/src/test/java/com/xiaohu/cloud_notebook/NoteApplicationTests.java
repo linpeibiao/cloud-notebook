@@ -2,6 +2,8 @@ package com.xiaohu.cloud_notebook;
 
 import com.xiaohu.cloud_notebook.model.domain.BaseUser;
 import com.xiaohu.cloud_notebook.service.BaseUserService;
+import com.xiaohu.cloud_notebook_common.model.domain.User;
+import com.xiaohu.cloud_notebook_common.util.UserHolder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,5 +32,12 @@ public class NoteApplicationTests {
         baseUser.setNoteBaseId(12L);
         baseUser.setUserId(67L);
         baseUserService.updateById(baseUser);
+    }
+
+    @Test
+    public void loginTest(){
+        User user = new User();
+        user.setId(67L);
+        UserHolder.save(user);
     }
 }

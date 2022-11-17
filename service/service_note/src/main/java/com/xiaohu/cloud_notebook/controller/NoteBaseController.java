@@ -60,4 +60,16 @@ public class NoteBaseController {
         return isSuccess ? Result.success("加入成功") : Result.fail("");
     }
 
+    /**
+     * 退出知识库
+     * @param noteBaseId
+     * @return
+     */
+    @ApiOperation("用户退出知识库")
+    @PostMapping("/user/exit/{noteBaseId}")
+    public Result exitNoteBase(@PathVariable("noteBaseId") Long noteBaseId){
+        boolean isSuccess = noteBaseService.exitNoteBase(noteBaseId);
+        return isSuccess ? Result.success("退出成功") : Result.fail("");
+    }
+
 }

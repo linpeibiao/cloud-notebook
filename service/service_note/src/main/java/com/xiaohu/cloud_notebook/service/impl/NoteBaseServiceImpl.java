@@ -42,7 +42,7 @@ public class NoteBaseServiceImpl extends ServiceImpl<NoteBaseMapper, NoteBase>
             throw new BusinessException(ResultCode.PARAMS_ERROR);
         }
         String noteBaseName = noteBaseDto.getNoteBaseName();
-        // TODO 自动设置创建者id 和创建者昵称
+        // TODO 自动设置创建者 id 和创建者昵称，从 UserHolder 中获取
         if (StringUtils.isEmpty(noteBaseName)){
             throw new BusinessException(ResultCode.PARAMS_ERROR, "知识库名不能为空");
         }
@@ -164,6 +164,41 @@ public class NoteBaseServiceImpl extends ServiceImpl<NoteBaseMapper, NoteBase>
         return baseUserService.save(baseUser);
     }
 
+    @Override
+    public boolean exitNoteBase(Long noteBaseId) {
+        if (noteBaseId == null || noteBaseId < 1){
+            throw new BusinessException(ResultCode.PARAMS_ERROR);
+        }
+        // 获取当前登录用户
+        // TODO 此处 user 为空，须配置网关拦截器
+        User user = UserHolder.get();
+        NoteBase noteBase = getById(noteBaseId);
+        long loginUserId = user.getId();
+
+        // 判断是否已经加入
+        if (!isJoin(loginUserId, noteBaseId)){
+            throw new BusinessException(ResultCode.NO_AUTH, "用户未加入此知识库");
+        }
+
+        // 判断是否为知识库创建者 不是创建者，直接删除记录即可
+        long createUserId = noteBase.getUserId();
+        if (loginUserId != createUserId){
+            return baseUserService.remove(new QueryWrapper<BaseUser>()
+                    .eq("user_id", loginUserId)
+                    .eq("note_base_id", noteBaseId));
+        }
+
+        // 若是创建者，查询知识库是否只有自己，是删除知识库
+        if (getNoteBaseUserCount(noteBaseId) <= 1){
+            return baseUserService.remove(new QueryWrapper<BaseUser>()
+                    .eq("user_id", loginUserId)
+                    .eq("note_base_id", noteBaseId));
+        }else{
+            // 否转让
+            throw new BusinessException(ResultCode.NO_AUTH, "请转让知识库后退出");
+        }
+    }
+
     /**
      * 判断用户是否已经加入知识库
      * @param userId
@@ -176,6 +211,16 @@ public class NoteBaseServiceImpl extends ServiceImpl<NoteBaseMapper, NoteBase>
                 .eq("user_id", userId)
                 .eq("note_base_id", noteBaseId));
         return count > 0;
+    }
+
+    /**
+     * 获取知识库已加入用户数
+     * @param noteBaseId
+     * @return
+     */
+    private long getNoteBaseUserCount(Long noteBaseId){
+        return baseUserService.count(new QueryWrapper<BaseUser>()
+                .eq("note_base_id", noteBaseId));
     }
 }
 

@@ -40,4 +40,11 @@ public interface NoteBaseService extends IService<NoteBase> {
      * @return
      */
     boolean joinNoteBase(JoinNoteBaseDto joinNoteBaseDto);
+
+    /**
+     * 退出知识库
+     * @param noteBaseId
+     * @return
+     */
+    boolean exitNoteBase(Long noteBaseId);
 }
