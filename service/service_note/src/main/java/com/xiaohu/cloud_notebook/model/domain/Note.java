@@ -48,13 +48,14 @@ public class Note implements Serializable {
     private Integer status;
 
     /**
-     * 备用字段1
+     * 所属知识库id
      */
-    private String backup1;
+    private Long noteBaseId;
 
     /**
      * 备用字段2
      */
+    @JsonIgnore
     private String backup2;
 
     /**

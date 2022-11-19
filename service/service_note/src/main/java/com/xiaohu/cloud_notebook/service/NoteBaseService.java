@@ -83,4 +83,12 @@ public interface NoteBaseService extends IService<NoteBase> {
      * @return
      */
     List<User> getUsersOfNoteBase(Long noteBaseId);
+
+    /**
+     * 知识库是否存在
+     * @param noteBaseId
+     * @return
+     */
+    boolean isNoteBaseExist(Long noteBaseId);
+
 }

@@ -249,6 +249,11 @@ public class NoteBaseServiceImpl extends ServiceImpl<NoteBaseMapper, NoteBase>
         return null;
     }
 
+    @Override
+    public boolean isNoteBaseExist(Long noteBaseId) {
+        return getById(noteBaseId) != null;
+    }
+
     /**
      * 判断用户是否已经加入知识库
      * @param userId
