@@ -6,6 +6,8 @@ import com.xiaohu.cloud_notebook_common.model.domain.User;
 import com.xiaohu.cloud_notebook.model.dto.UserDto;
 import com.xiaohu.cloud_notebook.model.vo.LoginUser;
 
+import javax.servlet.http.HttpSession;
+
 /**
 * @author xiaohu
 * @description 针对表【t_user】的数据库操作Service
@@ -14,7 +16,7 @@ import com.xiaohu.cloud_notebook.model.vo.LoginUser;
 public interface UserService extends IService<User> {
 
     /**
-     * 收集登录
+     * 手机登录
      * @param loginUser
      * @return
      */

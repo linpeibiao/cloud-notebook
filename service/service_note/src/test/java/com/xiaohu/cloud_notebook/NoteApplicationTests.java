@@ -1,9 +1,8 @@
 package com.xiaohu.cloud_notebook;
 
+import com.xiaohu.cloud_notebook.controller.NoteController;
 import com.xiaohu.cloud_notebook.model.domain.BaseUser;
 import com.xiaohu.cloud_notebook.service.BaseUserService;
-import com.xiaohu.cloud_notebook_common.model.domain.User;
-import com.xiaohu.cloud_notebook_common.util.UserHolder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +15,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class NoteApplicationTests {
     @Autowired
+    private NoteController noteController;
+    @Autowired
     private BaseUserService baseUserService;
+
+    @Test
+    public void loginTest(){
+        noteController.test();
+        noteController.test();
+        noteController.test();
+        noteController.test();
+        noteController.logoutTest();
+    }
 
     @Test
     public void saveTest(){
@@ -34,10 +44,4 @@ public class NoteApplicationTests {
         baseUserService.updateById(baseUser);
     }
 
-    @Test
-    public void loginTest(){
-        User user = new User();
-        user.setId(67L);
-        UserHolder.save(user);
-    }
 }

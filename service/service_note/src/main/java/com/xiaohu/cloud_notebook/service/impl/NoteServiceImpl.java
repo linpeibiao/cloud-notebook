@@ -11,6 +11,7 @@ import com.xiaohu.cloud_notebook_common.exception.BusinessException;
 import com.xiaohu.cloud_notebook_common.model.domain.User;
 import com.xiaohu.cloud_notebook_common.result.ResultCode;
 import com.xiaohu.cloud_notebook_common.util.UserHolder;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 * @description 针对表【t_note(笔记文档表)】的数据库操作Service实现
 * @createDate 2022-11-14 23:37:18
 */
+@Slf4j
 @Service
 public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note>
     implements NoteService {
@@ -29,6 +31,7 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note>
 
     @Override
     public Long addNote(AddNoteDto addNoteDto) {
+        log.info(Thread.currentThread().getName() + "用户添加笔记");
         if (addNoteDto == null){
             throw new BusinessException(ResultCode.PARAMS_ERROR);
         }
@@ -52,6 +55,9 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note>
         // 需要指定创建者和所属知识库
         // 获取登录用户 设置创建者信息
         User user = UserHolder.get();
+        if (user == null){
+            throw new BusinessException(ResultCode.NOT_LOGIN, "未登录");
+        }
         Long createdUserId = user.getId();
         String userNackName = user.getNackname();
         note.setUserId(createdUserId);
