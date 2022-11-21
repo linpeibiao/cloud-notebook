@@ -12,7 +12,7 @@
             <result property="content" column="content" jdbcType="VARCHAR"/>
             <result property="status" column="status" jdbcType="TINYINT"/>
             <result property="noteBaseId" column="note_base_id" jdbcType="BIGINT"/>
-            <result property="backup2" column="backup2" jdbcType="VARCHAR"/>
+            <result property="isEditing" column="is_editing" jdbcType="TINYINT"/>
             <result property="remark" column="remark" jdbcType="VARCHAR"/>
             <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
@@ -23,7 +23,7 @@
     <sql id="Base_Column_List">
         id,title,user_id,
         user_nackname,content,status,
-        note_base_id,backup2,remark,
+        note_base_id,is_editing,remark,
         is_deleted,create_time,update_time,
         version
     </sql>

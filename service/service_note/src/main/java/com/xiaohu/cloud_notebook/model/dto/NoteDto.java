@@ -1,8 +1,7 @@
 package com.xiaohu.cloud_notebook.model.dto;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.xiaohu.cloud_notebook.constant.NoteEditingStatusEnum;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -11,7 +10,7 @@ import lombok.Data;
  * @description
  */
 @Data
-public class AddNoteDto {
+public class NoteDto {
     /**
      * 标题
      */
@@ -32,6 +31,10 @@ public class AddNoteDto {
      */
     private Integer status;
 
+    /**
+     * 编辑状态
+     */
+    private NoteEditingStatusEnum isEditing;
 
     /**
      * 备注

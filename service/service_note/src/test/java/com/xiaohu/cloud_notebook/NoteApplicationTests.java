@@ -1,8 +1,12 @@
 package com.xiaohu.cloud_notebook;
+import com.xiaohu.cloud_notebook.constant.NoteEditingStatusEnum;
+import java.util.Date;
 
 import com.xiaohu.cloud_notebook.controller.NoteController;
 import com.xiaohu.cloud_notebook.model.domain.BaseUser;
+import com.xiaohu.cloud_notebook.model.domain.Note;
 import com.xiaohu.cloud_notebook.service.BaseUserService;
+import com.xiaohu.cloud_notebook.service.NoteService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,14 +22,20 @@ public class NoteApplicationTests {
     private NoteController noteController;
     @Autowired
     private BaseUserService baseUserService;
+    @Autowired
+    private NoteService noteService;
 
     @Test
-    public void loginTest(){
-        noteController.test();
-        noteController.test();
-        noteController.test();
-        noteController.test();
-        noteController.logoutTest();
+    public void saveEnumTest(){
+        Note note = new Note();
+        note.setTitle("");
+        note.setUserId(67L);
+        note.setUserNackname("收割稻草的假面骑士");
+        note.setContent("and I will be a knight!");
+        note.setStatus(0);
+        note.setNoteBaseId(4L);
+        note.setIsEditing(NoteEditingStatusEnum.NOTEDITING);
+        noteService.save(note);
     }
 
     @Test

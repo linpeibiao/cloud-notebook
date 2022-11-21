@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.xiaohu.cloud_notebook.constant.NoteEditingStatusEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -53,10 +54,9 @@ public class Note implements Serializable {
     private Long noteBaseId;
 
     /**
-     * 备用字段2
+     * 编辑状态
      */
-    @JsonIgnore
-    private String backup2;
+    private NoteEditingStatusEnum isEditing;
 
     /**
      * 备注
@@ -70,7 +70,7 @@ public class Note implements Serializable {
     @ApiModelProperty(value = "逻辑删除")
     @TableField(value = "is_deleted", fill = FieldFill.INSERT)
     @TableLogic
-    private Integer isDeleted;
+    private Integer deleted;
 
     /**
      * 创建时间

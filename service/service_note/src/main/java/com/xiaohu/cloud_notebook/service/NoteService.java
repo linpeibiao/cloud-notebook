@@ -2,7 +2,7 @@ package com.xiaohu.cloud_notebook.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xiaohu.cloud_notebook.model.domain.Note;
-import com.xiaohu.cloud_notebook.model.dto.AddNoteDto;
+import com.xiaohu.cloud_notebook.model.dto.NoteDto;
 
 /**
 * @author xiaohu
@@ -13,9 +13,22 @@ public interface NoteService extends IService<Note> {
 
     /**
      * 添加笔记
-     * @param addNoteDto
+     * @param noteDto
      * @return
      */
-    Long addNote(AddNoteDto addNoteDto);
+    Long addNote(NoteDto noteDto);
 
+    /**
+     * 删除
+     * @param noteId
+     * @return
+     */
+    boolean deleteNote(Long noteId);
+
+    /**
+     * 编辑笔记
+     * @param noteDto
+     * @return
+     */
+    boolean editNode(NoteDto noteDto, Long noteId);
 }
