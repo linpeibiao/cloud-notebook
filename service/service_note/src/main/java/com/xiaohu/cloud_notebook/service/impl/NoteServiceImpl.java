@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaohu.cloud_notebook.mapper.NoteMapper;
 import com.xiaohu.cloud_notebook.model.domain.Note;
+import com.xiaohu.cloud_notebook.model.domain.NoteBase;
 import com.xiaohu.cloud_notebook.model.dto.NoteDto;
 import com.xiaohu.cloud_notebook.service.NoteBaseService;
 import com.xiaohu.cloud_notebook.service.NoteService;
@@ -19,6 +20,7 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static com.xiaohu.cloud_notebook_common.constant.RedisConstant.DISTRIBUTED_LOCK_KEY;
@@ -127,6 +129,27 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note>
             lock.unlock();
         }
         return false;
+    }
+
+    @Override
+    public List<Note> getNotesByNoteBaseId(Long noteBaseId) {
+        if (noteBaseId == null || noteBaseId < 1){
+            throw new BusinessException(ResultCode.PARAMS_ERROR);
+        }
+
+        // TODO 获取当前登录用户
+        User user = UserHolder.get();
+        if (user == null){
+            throw new BusinessException(ResultCode.NOT_LOGIN);
+        }
+        // 获取知识库
+        NoteBase noteBase = noteBaseService.getById(noteBaseId);
+        // 判断知识库是否存在 是否属于当前登录用户
+        if (noteBase == null || !user.getId().equals(noteBase.getUserId())){
+            throw new BusinessException(ResultCode.NO_AUTH, "无权限");
+        }
+        // 查询
+        return list(new QueryWrapper<Note>().eq("note_base_id", noteBaseId));
     }
 }
 

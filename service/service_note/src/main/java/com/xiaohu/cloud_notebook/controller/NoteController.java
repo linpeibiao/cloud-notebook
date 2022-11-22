@@ -1,5 +1,6 @@
 package com.xiaohu.cloud_notebook.controller;
 
+import com.xiaohu.cloud_notebook.model.domain.Note;
 import com.xiaohu.cloud_notebook.model.dto.NoteDto;
 import com.xiaohu.cloud_notebook.service.NoteService;
 import com.xiaohu.cloud_notebook_common.result.Result;
@@ -8,6 +9,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author xiaohu
@@ -42,6 +45,13 @@ public class NoteController {
     public Result editNote(@RequestBody NoteDto noteDto, @PathVariable("noteId") Long noteId){
         boolean isSuccess = noteService.editNode(noteDto, noteId);
         return isSuccess ? Result.success("保存成功") : Result.fail("请再试试");
+    }
+
+    @ApiOperation("获取用户某知识库笔记")
+    @PostMapping("/list/by/noteBaseId/{noteBaseId}")
+    public Result<List<Note>> getNotesByNoteBaseId(@PathVariable("noteBaseId") Long noteBaseId){
+        List<Note> noteList = noteService.getNotesByNoteBaseId(noteBaseId);
+        return Result.success(noteList);
     }
 
 }

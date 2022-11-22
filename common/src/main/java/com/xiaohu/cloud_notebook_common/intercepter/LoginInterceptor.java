@@ -38,20 +38,23 @@ public class LoginInterceptor implements HandlerInterceptor {
             log.info("不存在登录用户");
             HttpSession httpSession = request.getSession();
             // 从 session 获取 token
-            String token = (String) httpSession.getAttribute("token");
-            // 判断 token 是否存在
-            if (StringUtils.isBlank(token)){
-                return false;
-            }
-            String tokenKey = LOGIN_USER_KEY + token;
-            // 先从 redis 中拿到登录信息，若数据为空，返回false
-            Map<Object, Object> userMap = stringRedisTemplate.opsForHash().entries(tokenKey);
-            // 判断 userMap
-            if (userMap.isEmpty()){
-                return false;
-            }
-            // 将 map 转换成 User 实体
-            User user = BeanUtil.fillBeanWithMap(userMap, new User(), false);
+//            String token = (String) httpSession.getAttribute("token");
+//            // 判断 token 是否存在
+//            if (StringUtils.isBlank(token)){
+//                return false;
+//            }
+//            String tokenKey = LOGIN_USER_KEY + token;
+//            // 先从 redis 中拿到登录信息，若数据为空，返回false
+//            Map<Object, Object> userMap = stringRedisTemplate.opsForHash().entries(tokenKey);
+//            // 判断 userMap
+//            if (userMap.isEmpty()){
+//                return false;
+//            }
+//            // 将 map 转换成 User 实体
+//            User user = BeanUtil.fillBeanWithMap(userMap, new User(), false);
+            User user = new User();
+            user.setNackname("linxiaohu");
+            user.setId(67L);
             // 将 USer 保存在 UserHolder
             UserHolder.save(user);
             return true;

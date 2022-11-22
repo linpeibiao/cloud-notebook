@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.xiaohu.cloud_notebook.model.domain.Note;
 import com.xiaohu.cloud_notebook.model.dto.NoteDto;
 
+import java.util.List;
+
 /**
 * @author xiaohu
 * @description 针对表【t_note(笔记文档表)】的数据库操作Service
@@ -31,4 +33,11 @@ public interface NoteService extends IService<Note> {
      * @return
      */
     boolean editNode(NoteDto noteDto, Long noteId);
+
+    /**
+     * 获取用户某知识库中的所有笔记
+     * @param noteBaseId
+     * @return
+     */
+    List<Note> getNotesByNoteBaseId(Long noteBaseId);
 }

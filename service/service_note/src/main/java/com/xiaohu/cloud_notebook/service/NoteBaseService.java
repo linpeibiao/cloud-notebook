@@ -53,7 +53,7 @@ public interface NoteBaseService extends IService<NoteBase> {
     boolean exitNoteBase(Long noteBaseId);
 
     /**
-     *
+     * 通过知识库id获取详情
      * @param noteBaseId
      * @return
      */
