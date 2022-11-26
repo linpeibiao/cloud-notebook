@@ -1,0 +1,9 @@
+FROM openjdk:8
+
+RUN mkdir /usr/myapp
+
+COPY service/service_user/target/service_user-1.0-SNAPSHOT.jar /usr/myapp
+
+WORKDIR /usr/myapp
+
+ENTRYPOINT ["java", "-jar", "Xmx256m", "service_user-1.0-SNAPSHOT.jar"]
