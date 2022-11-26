@@ -1,7 +1,7 @@
 #!/bin/bash
 git stash save
 git pull
-mvn clean package
+mvn clean package -DskipTests=true
 docker stop service_note
 docker stop service_user
 docker rm service_note
