@@ -5,7 +5,7 @@ mvn clean package -DskipTests=true
 docker stop service_note
 docker stop service_user
 docker rm service_note
-docker rm service_user
+docker rm service_user:
 docker image rm service_note:v1.0.0
 docker image rm service_user:v1.0.0
 docker build . -f Dockerfile_note -t service_note:v1.0.0
