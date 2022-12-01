@@ -48,6 +48,12 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- open feign -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-openfeign</artifactId>
+                <version>2.2.1.RELEASE</version>
+            </dependency>
             <!--spring boot 2.6.4-->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
