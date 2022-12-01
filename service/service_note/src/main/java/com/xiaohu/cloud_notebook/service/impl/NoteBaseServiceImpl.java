@@ -1,8 +1,7 @@
 package com.xiaohu.cloud_notebook.service.impl;
-import java.util.Date;
+
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -17,6 +16,7 @@ import com.xiaohu.cloud_notebook.model.dto.NoteBaseDto;
 import com.xiaohu.cloud_notebook.model.dto.NoteBaseInfoDto;
 import com.xiaohu.cloud_notebook.service.BaseUserService;
 import com.xiaohu.cloud_notebook.service.NoteBaseService;
+import com.xiaohu.cloud_notebook.service.UserFeignService;
 import com.xiaohu.cloud_notebook_common.exception.BusinessException;
 import com.xiaohu.cloud_notebook_common.model.domain.User;
 import com.xiaohu.cloud_notebook_common.result.ResultCode;
@@ -38,6 +38,8 @@ public class NoteBaseServiceImpl extends ServiceImpl<NoteBaseMapper, NoteBase>
     private NoteBaseMapper noteBaseMapper;
     @Autowired
     private BaseUserService baseUserService;
+    @Autowired
+    private UserFeignService userFeignService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -246,7 +248,8 @@ public class NoteBaseServiceImpl extends ServiceImpl<NoteBaseMapper, NoteBase>
         List<Long> userIdList = baseUserList.stream().map(baseUser -> baseUser.getUserId()).collect(Collectors.toList());
         // 通过列表查询用户列表
         // TODO 需要使用 openfeign 调用 user 模块的接口
-        return null;
+        List<User> userList = userFeignService.getUserByIds(userIdList).getData();
+        return userList;
     }
 
     @Override

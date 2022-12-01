@@ -13,7 +13,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication(scanBasePackages = {"com.xiaohu"})
 @MapperScan("com.xiaohu.cloud_notebook.mapper")
-@EnableFeignClients
+@EnableFeignClients("com.xiaohu.cloud_notebook.service")
 public class NoteApplication {
     public static void main(String[] args) {
         SpringApplication.run(NoteApplication.class, args);
