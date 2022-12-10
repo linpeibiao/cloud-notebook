@@ -6,6 +6,8 @@ import com.xiaohu.cloud_notebook.model.dto.JoinNoteBaseDto;
 import com.xiaohu.cloud_notebook.model.dto.NoteBaseDto;
 import com.xiaohu.cloud_notebook.model.dto.NoteBaseInfoDto;
 import com.xiaohu.cloud_notebook.service.NoteBaseService;
+import com.xiaohu.cloud_notebook_common.anotation.AuthCheck;
+import com.xiaohu.cloud_notebook_common.constant.UserRole;
 import com.xiaohu.cloud_notebook_common.model.domain.User;
 import com.xiaohu.cloud_notebook_common.result.Result;
 import io.swagger.annotations.Api;
