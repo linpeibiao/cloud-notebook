@@ -1,10 +1,6 @@
 package com.xiaohu.cloud_notebook_common.intercepter;
 
-import cn.hutool.core.bean.BeanUtil;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.xiaohu.cloud_notebook_common.exception.BusinessException;
 import com.xiaohu.cloud_notebook_common.model.domain.User;
-import com.xiaohu.cloud_notebook_common.result.ResultCode;
 import com.xiaohu.cloud_notebook_common.util.UserHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import java.util.Map;
-
-import static com.xiaohu.cloud_notebook_common.constant.RedisConstant.LOGIN_USER_KEY;
 
 /**
  * @author xiaohu
@@ -37,6 +30,9 @@ public class LoginInterceptor implements HandlerInterceptor {
         if (UserHolder.get() == null) {
             log.info("不存在登录用户");
             HttpSession httpSession = request.getSession();
+            // TODO 从前端发送来的请求头中获取 token, 再根据 token 从 redis 获取用户信息
+            // TODO 1.获取请求头中的token
+            // String token = request.getHeader("authorization");
             // 从 session 获取 token
 //            String token = (String) httpSession.getAttribute("token");
 //            // 判断 token 是否存在
