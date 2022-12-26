@@ -1,21 +1,27 @@
 package com.xiaohu.cloud_notebook;
+import cn.hutool.http.HttpUtil;
 import com.xiaohu.cloud_notebook.constant.NoteEditingStatusEnum;
 import java.util.Date;
+import java.util.HashMap;
 
 import com.xiaohu.cloud_notebook.controller.NoteController;
 import com.xiaohu.cloud_notebook.model.domain.BaseUser;
 import com.xiaohu.cloud_notebook.model.domain.Note;
 import com.xiaohu.cloud_notebook.service.BaseUserService;
 import com.xiaohu.cloud_notebook.service.NoteService;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * @author xiaohu
  * @date 2022/11/16/ 16:26
  * @description
  */
+@RunWith(SpringRunner.class)
 @SpringBootTest
 public class NoteApplicationTests {
     @Autowired
@@ -24,6 +30,16 @@ public class NoteApplicationTests {
     private BaseUserService baseUserService;
     @Autowired
     private NoteService noteService;
+
+    @Test
+    public void hutoolsTest(){
+        //可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
+        HashMap<String, Object> paramMap = new HashMap<>();
+        paramMap.put("account", "linxiaohu");
+        paramMap.put("password", "linxiaohu");
+        Object result = HttpUtil.get("http://43.139.60.130:9000/user/login/by/account", paramMap);
+        System.out.println(result);
+    }
 
     @Test
     public void saveEnumTest(){

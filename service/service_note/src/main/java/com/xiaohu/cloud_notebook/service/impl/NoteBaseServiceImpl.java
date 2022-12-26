@@ -17,6 +17,8 @@ import com.xiaohu.cloud_notebook.model.dto.NoteBaseInfoDto;
 import com.xiaohu.cloud_notebook.service.BaseUserService;
 import com.xiaohu.cloud_notebook.service.NoteBaseService;
 import com.xiaohu.cloud_notebook.service.UserFeignService;
+import com.xiaohu.cloud_notebook_common.anotation.AuthCheck;
+import com.xiaohu.cloud_notebook_common.constant.UserRole;
 import com.xiaohu.cloud_notebook_common.exception.BusinessException;
 import com.xiaohu.cloud_notebook_common.model.domain.User;
 import com.xiaohu.cloud_notebook_common.result.ResultCode;
@@ -43,18 +45,19 @@ public class NoteBaseServiceImpl extends ServiceImpl<NoteBaseMapper, NoteBase>
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @AuthCheck(mustRole = UserRole.COMMON_USER)
     public Long addNoteBase(NoteBaseDto noteBaseDto) {
         // 判空
         if (noteBaseDto == null){
             throw new BusinessException(ResultCode.PARAMS_ERROR);
         }
         String noteBaseName = noteBaseDto.getNoteBaseName();
-        // TODO 自动设置创建者 id 和创建者昵称，从 UserHolder 中获取
         if (StringUtils.isEmpty(noteBaseName)){
             throw new BusinessException(ResultCode.PARAMS_ERROR, "知识库名不能为空");
         }
         int status = noteBaseDto.getStatus();
         // 判断是否加密
+        // TODO 添加状态枚举值
         if (status == 2){
             // 密码是否为空
             if (StringUtils.isEmpty(noteBaseDto.getPassword())){
@@ -63,6 +66,12 @@ public class NoteBaseServiceImpl extends ServiceImpl<NoteBaseMapper, NoteBase>
         }
         // 将 noteBaseDto 转换成 实体类对象
         NoteBase noteBase = BeanUtil.copyProperties(noteBaseDto, NoteBase.class, "id");
+        // 自动设置创建者 id 和创建者昵称，从 UserHolder 中获取
+        User user = UserHolder.get();
+        String userNackName = user.getNackname();
+        Long userId = user.getId();
+        noteBase.setUserNackname(userNackName);
+        noteBase.setUserId(userId);
         save(noteBase);
         // 关系表添加记录
         baseUserService.addRecord(noteBase.getId(), noteBase.getUserId());
@@ -70,6 +79,7 @@ public class NoteBaseServiceImpl extends ServiceImpl<NoteBaseMapper, NoteBase>
     }
 
     @Override
+    @AuthCheck(mustRole = UserRole.COMMON_USER)
     public boolean infoUpdate(NoteBaseInfoDto noteBaseInfoDto) {
         // 判空
         if (noteBaseInfoDto == null){
@@ -79,11 +89,11 @@ public class NoteBaseServiceImpl extends ServiceImpl<NoteBaseMapper, NoteBase>
         if (id == null || id < 1){
             throw new BusinessException(ResultCode.PARAMS_ERROR, "知识库 id 不合法");
         }
-        // TODO 获取当前登录用户，判断修改的知识库是否属于当前登录用户
-//        User user = UserHolder.get();
-//        if (!user.getId().equals(id)){
-//            throw new BusinessException(ResultCode.NO_AUTH, "无权限");
-//        }
+        // 获取当前登录用户，判断修改的知识库是否属于当前登录用户
+        User user = UserHolder.get();
+        if (!user.getId().equals(id)){
+            throw new BusinessException(ResultCode.NO_AUTH, "无权限");
+        }
 
         // 状态修改判断，如果设置为加密，需要设置密码
         int status = noteBaseInfoDto.getStatus();
@@ -99,6 +109,7 @@ public class NoteBaseServiceImpl extends ServiceImpl<NoteBaseMapper, NoteBase>
     }
 
     @Override
+    @AuthCheck(mustRole = UserRole.COMMON_USER)
     public boolean transferTo(NoteBaseDto noteBaseDto, Long noteBaseId) {
         // 判空
         if (noteBaseDto == null || noteBaseId < 0){
@@ -111,11 +122,11 @@ public class NoteBaseServiceImpl extends ServiceImpl<NoteBaseMapper, NoteBase>
         if (noteBase == null){
             throw new BusinessException(ResultCode.NOT_FOUND, "该用户不在知识库中");
         }
-        // TODO 判断该知识库的创建者是否为当前登录用户
-//        User user = UserHolder.get();
-//        if (!noteBase.getUserId().equals(user.getId())){
-//            throw new BusinessException(ResultCode.NO_AUTH, "无权限，只能创建者可以转让知识库");
-//        }
+        // 判断该知识库的创建者是否为当前登录用户
+        User user = UserHolder.get();
+        if (!noteBase.getUserId().equals(user.getId())){
+            throw new BusinessException(ResultCode.NO_AUTH, "无权限，只能创建者可以转让知识库");
+        }
 
         // 查看转让的用户是否在此知识库
         Long transferTo = noteBaseDto.getUserId();
@@ -130,13 +141,14 @@ public class NoteBaseServiceImpl extends ServiceImpl<NoteBaseMapper, NoteBase>
     }
 
     @Override
+    @AuthCheck(mustRole = UserRole.COMMON_USER)
     public boolean joinNoteBase(JoinNoteBaseDto joinNoteBaseDto) {
         // 判空
         if (joinNoteBaseDto == null){
             throw new BusinessException(ResultCode.PARAMS_ERROR);
         }
-        // TODO userId 可以从当前登录用户拿
-        long userId = joinNoteBaseDto.getUserId();
+        // userId 当前登录用户拿
+        long userId = UserHolder.get().getId();
         long noteBaseId = joinNoteBaseDto.getNoteBaseId();
         if (userId < 1 || noteBaseId < 1){
             throw new BusinessException(ResultCode.PARAMS_ERROR, "请求参数不合法");
@@ -172,12 +184,12 @@ public class NoteBaseServiceImpl extends ServiceImpl<NoteBaseMapper, NoteBase>
     }
 
     @Override
+    @AuthCheck(mustRole = UserRole.COMMON_USER)
     public boolean exitNoteBase(Long noteBaseId) {
         if (noteBaseId == null || noteBaseId < 1){
             throw new BusinessException(ResultCode.PARAMS_ERROR);
         }
         // 获取当前登录用户
-        // TODO 此处 user 为空，须配置网关拦截器
         User user = UserHolder.get();
         NoteBase noteBase = getById(noteBaseId);
         long loginUserId = user.getId();
@@ -247,7 +259,7 @@ public class NoteBaseServiceImpl extends ServiceImpl<NoteBaseMapper, NoteBase>
         // 拿到用户id列表
         List<Long> userIdList = baseUserList.stream().map(baseUser -> baseUser.getUserId()).collect(Collectors.toList());
         // 通过列表查询用户列表
-        // TODO 需要使用 openfeign 调用 user 模块的接口
+        // 使用 openfeign 调用 user 模块的接口
         List<User> userList = userFeignService.getUserByIds(userIdList).getData();
         return userList;
     }

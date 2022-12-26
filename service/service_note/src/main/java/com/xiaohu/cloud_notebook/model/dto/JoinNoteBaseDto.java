@@ -9,7 +9,6 @@ import lombok.Data;
  */
 @Data
 public class JoinNoteBaseDto {
-    private Long userId;
     private Long noteBaseId;
     private String password;
 }

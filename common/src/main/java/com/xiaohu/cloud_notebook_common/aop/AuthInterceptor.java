@@ -45,14 +45,17 @@ public class AuthInterceptor {
         HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
         // 当前登录用户
         User user = UserHolder.get();
-        // 拥有任意权限即通过
-        if (CollectionUtils.isNotEmpty(anyRole)) {
-            Integer userRole = user.getRole();
-            if (!anyRole.contains(userRole)) {
-                throw new BusinessException(ResultCode.NO_AUTH, "无权限");
-            }
+        if (user == null){
+            throw new BusinessException(ResultCode.NOT_LOGIN, "未登录");
         }
-        // 必须有所有权限才通过
+        // 拥有任意权限即通过
+//        if (CollectionUtils.isNotEmpty(anyRole)) {
+//            Integer userRole = user.getRole();
+//            if (!anyRole.contains(userRole)) {
+//                throw new BusinessException(ResultCode.NO_AUTH, "无权限");
+//            }
+//        }
+        // 必须有指定权限才通过
         Integer userRole = user.getRole();
         if (!mustRole.equals(userRole)) {
             throw new BusinessException(ResultCode.NO_AUTH, "无权限");
