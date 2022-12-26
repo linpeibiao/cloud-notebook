@@ -17,7 +17,6 @@ public class NoteBaseDto {
     private String noteBaseName;
     /**
      * 创建用户id
-     * TODO 不需要前端传，直接从 ThreadLocal 获取即可
      */
     private Long userId;
     private String userNackName;

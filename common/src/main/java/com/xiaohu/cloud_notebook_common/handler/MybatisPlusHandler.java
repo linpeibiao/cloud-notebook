@@ -24,6 +24,6 @@ public class MybatisPlusHandler implements MetaObjectHandler {
     @Override
     public void updateFill(MetaObject metaObject) {
         this.setFieldValByName("updateTime", new Date(), metaObject);
-        // TODO 乐观锁自加 1
+        // TODO 乐观锁自加 1 需要先查询在获取后才能更新，类似自旋锁
     }
 }

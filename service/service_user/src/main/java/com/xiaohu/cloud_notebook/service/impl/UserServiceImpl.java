@@ -14,6 +14,7 @@ import com.xiaohu.cloud_notebook.util.CodeGenerator;
 import com.xiaohu.cloud_notebook_common.exception.BusinessException;
 import com.xiaohu.cloud_notebook_common.helper.JwtHelper;
 import com.xiaohu.cloud_notebook_common.result.ResultCode;
+import com.xiaohu.cloud_notebook_common.util.UserHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,7 +112,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         if (StringUtils.isEmpty(phone)){
             throw new BusinessException(ResultCode.PARAMS_ERROR, "手机号不存在");
         }
-        // TODO 获取当前用户
         // 判断账号是否唯一
         String account = userDto.getAccount();
         if (accountIsExist(account)){
@@ -120,8 +120,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 将dto转换成user对象
         User user = BeanUtil.copyProperties(userDto, User.class);
         // 保存更新
-        boolean isSuccess = update(user, new QueryWrapper<User>().eq("phone", userDto.getPhone()));
-        return isSuccess;
+        return update(user, new QueryWrapper<User>().eq("phone", userDto.getPhone()));
     }
 
     @Override
@@ -135,11 +134,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         if (StringUtils.isAnyEmpty(account, password)){
             throw new BusinessException(ResultCode.PARAMS_ERROR, "账号密码不能为空");
         }
-        // TODO 判断当前用户 判断用户是否存在
-//        User curUser = (User) Holder.get();
-//        if (curUser == null || !account.equals(curUser.getAccount())){
-//            throw new BusinessException(ResultCode.NO_AUTH);
-//        }
+        // 判断当前用户 判断用户是否存在
+        User curUser = UserHolder.get();
+        if (curUser == null || !account.equals(curUser.getAccount())){
+            throw new BusinessException(ResultCode.NO_AUTH);
+        }
         // TODO 判断密码长度
         // 密码加密
         String encryptPassword = DigestUtils.md5DigestAsHex((SALT + password).getBytes());

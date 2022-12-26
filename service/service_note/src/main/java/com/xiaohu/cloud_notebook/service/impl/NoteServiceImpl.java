@@ -86,7 +86,7 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note>
         if (noteId == null || noteId < 1){
             throw new BusinessException(ResultCode.PARAMS_ERROR);
         }
-        // TODO 获取当前用户
+        // 获取当前用户
         User user = UserHolder.get();
         if (user == null){
             throw new BusinessException(ResultCode.NOT_LOGIN, "未登录");
@@ -137,7 +137,7 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note>
             throw new BusinessException(ResultCode.PARAMS_ERROR);
         }
 
-        // TODO 获取当前登录用户
+        // 获取当前登录用户
         User user = UserHolder.get();
         if (user == null){
             throw new BusinessException(ResultCode.NOT_LOGIN);
