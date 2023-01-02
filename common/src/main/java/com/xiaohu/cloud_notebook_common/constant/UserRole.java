@@ -2,7 +2,6 @@ package com.xiaohu.cloud_notebook_common.constant;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  * @author xiaohu
