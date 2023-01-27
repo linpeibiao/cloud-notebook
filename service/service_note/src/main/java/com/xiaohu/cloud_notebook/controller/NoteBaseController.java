@@ -6,8 +6,6 @@ import com.xiaohu.cloud_notebook.model.dto.JoinNoteBaseDto;
 import com.xiaohu.cloud_notebook.model.dto.NoteBaseDto;
 import com.xiaohu.cloud_notebook.model.dto.NoteBaseInfoDto;
 import com.xiaohu.cloud_notebook.service.NoteBaseService;
-import com.xiaohu.cloud_notebook_common.anotation.AuthCheck;
-import com.xiaohu.cloud_notebook_common.constant.UserRole;
 import com.xiaohu.cloud_notebook_common.model.domain.User;
 import com.xiaohu.cloud_notebook_common.result.Result;
 import io.swagger.annotations.Api;
@@ -38,7 +36,7 @@ public class NoteBaseController {
     }
 
     @ApiOperation("用户修改知识库基本信息")
-    @PostMapping("/info/update")
+    @PutMapping("/info-update")
     public Result<String> infoUpdate(@RequestBody NoteBaseInfoDto noteBaseInfoDto){
         boolean isSuccess = noteBaseService.infoUpdate(noteBaseInfoDto);
         return isSuccess ? Result.success("修改成功") : Result.fail();
@@ -49,7 +47,7 @@ public class NoteBaseController {
      * @return
      */
     @ApiOperation("用户转让知识库")
-    @PostMapping("/user/transfer/{noteBaseId}")
+    @PutMapping("/user-transfer/{noteBaseId}")
     public Result transferNoteBase(@RequestBody NoteBaseDto noteBaseDto, @PathVariable("noteBaseId") Long noteBaseId){
         boolean isSuccess = noteBaseService.transferTo(noteBaseDto, noteBaseId);
         return isSuccess ? Result.success("修改成功") : Result.fail("");
@@ -61,7 +59,7 @@ public class NoteBaseController {
      * @return
      */
     @ApiOperation("用户加入知识库")
-    @PostMapping("/user/join")
+    @PostMapping("/user-join")
     public Result joinNoteBase(@RequestBody JoinNoteBaseDto joinNoteBaseDto){
         boolean isSuccess = noteBaseService.joinNoteBase(joinNoteBaseDto);
         return isSuccess ? Result.success("加入成功") : Result.fail("");
@@ -73,21 +71,21 @@ public class NoteBaseController {
      * @return
      */
     @ApiOperation("用户退出知识库")
-    @PostMapping("/user/exit/{noteBaseId}")
+    @PutMapping("/user-exit/{noteBaseId}")
     public Result exitNoteBase(@PathVariable("noteBaseId") Long noteBaseId){
         boolean isSuccess = noteBaseService.exitNoteBase(noteBaseId);
         return isSuccess ? Result.success("退出成功") : Result.fail("");
     }
 
     @ApiOperation("通过id获取知识库信息")
-    @PostMapping("/get/by/id/{noteBaseId}")
+    @GetMapping("/get-by-id/{noteBaseId}")
     public Result<NoteBase> getNoteBaseById(@PathVariable("noteBaseId") Long noteBaseId){
         NoteBase noteBase = noteBaseService.getNoteBaseById(noteBaseId);
         return Result.success(noteBase);
     }
 
     @ApiOperation("分页获取用户知识库")
-    @PostMapping("/page/by/userId/{pageNum}/{pageSize}/{userId}")
+    @GetMapping("/page-by-userId/{pageNum}/{pageSize}/{userId}")
     public Result<IPage<NoteBase>> getNoteBasePageByUserId(@PathVariable("pageNum")int pageNum,
                                                           @PathVariable("pageSize")int pageSize,
                                                           @PathVariable("userId") Long userId){
@@ -99,7 +97,7 @@ public class NoteBaseController {
     }
 
     @ApiOperation("分页模糊查询知识库")
-    @PostMapping("/page/by/note/base/name/{pageNum}/{pageSize}/{noteBaseName}")
+    @GetMapping("/page-by-name/{pageNum}/{pageSize}/{noteBaseName}")
     public Result<IPage<NoteBase>> getNoteBasePageByNoteBaseName(@PathVariable("pageNum")int pageNum,
                                                            @PathVariable("pageSize")int pageSize,
                                                            @PathVariable("noteBaseName") String noteBaseName){
@@ -111,7 +109,7 @@ public class NoteBaseController {
     }
 
     @ApiOperation("获取知识库所有用户")
-    @PostMapping("/get/users/{noteBaseId}")
+    @GetMapping("/get-users/{noteBaseId}")
     public Result<List<User>> getUsersOfNoteBase(@PathVariable("noteBaseId") Long noteBaseId){
         List<User> userList = noteBaseService.getUsersOfNoteBase(noteBaseId);
         return Result.success(userList);
