@@ -26,14 +26,14 @@ public class UserController {
     private UserService userService;
 
     @ApiOperation("通过账号设置密码")
-    @PostMapping("/set/password")
+    @PutMapping("/set/password")
     public Result<String> setPassword(@RequestBody LoginUser loginUser){
         boolean isSuccess = userService.setPassword(loginUser);
         return isSuccess ? Result.success("修改成功") : Result.fail("");
     }
 
     @ApiOperation("用户更改手机号")
-    @GetMapping("/change/phone/{phone}")
+    @PutMapping("/change/phone/{phone}")
     public Result<String> changePhone(@PathVariable("phone") String phone){
         // TODO
         return null;
@@ -55,14 +55,14 @@ public class UserController {
      * @return
      */
     @ApiOperation("用户更新信息")
-    @PostMapping("/update")
+    @PutMapping("/update")
     public Result<String> update(@RequestBody UserDto userDto){
         boolean isSuccess = userService.updateInfo(userDto);
         return isSuccess ? Result.success("修改成功") : Result.fail("");
     }
 
     @ApiOperation("用户账号登陆")
-    @PostMapping("/login/by/account")
+    @PostMapping("/login-by-account")
     public Result<String> loginByAccount(@RequestBody LoginUser loginUser){
         String token = userService.loginByAccount(loginUser);
         return Result.success(token);
@@ -87,7 +87,7 @@ public class UserController {
     }
 
     @ApiOperation("获取用户列表")
-    @PostMapping("/list/by/ids")
+    @GetMapping("/list-by-ids")
     public Result<List<User>> getUserList(@RequestBody List<Long> userIdList){
         List<User> userList = userService.listByIds(userIdList);
         return Result.success(userList);

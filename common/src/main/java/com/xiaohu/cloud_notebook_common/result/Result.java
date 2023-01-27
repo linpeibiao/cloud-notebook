@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Result<T> {
     /**
-     * 构造response，code用于前端判断，message可以在前端显示错误信息，视情况传data
+     * 构造 code 用于前端判断，message可以在前端显示错误信息，视情况传data
      */
     private int code;
     private String message;
@@ -38,7 +38,7 @@ public class Result<T> {
         }
         return result;
     }
-    public static <T> Result<T> build(T body, ResultCode resultCode) {
+    protected static <T> Result<T> build(T body, ResultCode resultCode) {
         Result<T> result = build(body);
         result.setCode(resultCode.getCode());
         result.setMessage(resultCode.getMessage());

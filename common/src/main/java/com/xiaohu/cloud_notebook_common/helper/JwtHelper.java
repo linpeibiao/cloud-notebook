@@ -60,14 +60,14 @@ public class JwtHelper {
      * @param token
      * @return
      */
-    public static String getUserName(String token) {
+    public static String getAccount(String token) {
         if(StringUtils.isEmpty(token)) {
             return "";
         }
 
         Jws<Claims> claimsJws = Jwts.parser().setSigningKey(tokenSignKey).parseClaimsJws(token);
         Claims claims = claimsJws.getBody();
-        return (String)claims.get("userName");
+        return (String)claims.get("account");
     }
 
 }
