@@ -10,14 +10,14 @@ package com.xiaohu.cloud_notebook_common.result;
  * 枚举隐含了所创建的类型都是 java.lang.Enum 类的子类，可以把 enum 看成是一个普通的 class，它们都可以定义一些属性和方法
  */
 public enum ResultCode {
-    SUCCESS(0, "ok", ""),
-    FAIL(40000, "请求失败", ""),
-    NULL_ERROR(40001, "请求数据为空", ""),
-    PARAMS_ERROR(40002, "请求参数错误", ""),
-    NOT_LOGIN(40100, "未登录", ""),
-    NO_AUTH(40101, "无权限", ""),
-    NOT_FOUND(40004, "未找到资源", ""),
-    SYSTEM_ERROR(50000, "系统内部异常", "");
+    SUCCESS(20000, "ok", ""),
+    FAIL(20400, "请求失败", ""),
+    NULL_ERROR(20405, "请求数据为空", ""),
+    PARAMS_ERROR(20402, "请求参数错误", ""),
+    NOT_LOGIN(20401, "未登录", ""),
+    NO_AUTH(20403, "无权限", ""),
+    NOT_FOUND(20404, "未找到资源", ""),
+    SYSTEM_ERROR(20500, "系统内部异常", "");
 
     private final int code;
 
