@@ -10,57 +10,27 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
- * 知识库表
- * @TableName t_note_base
+ * 
+ * @TableName t_note_content
  */
-@TableName(value ="t_note_base")
+@TableName(value ="t_note_content")
 @Data
-public class NoteBase implements Serializable {
+public class NoteContent implements Serializable {
     /**
      * 主键id
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
-     * 知识库名
+     * 笔记主键id
      */
-    private String noteBaseName;
+    private Long noteId;
 
     /**
-     * 创建者id
+     * 笔记内容
      */
-    private Long userId;
-
-    /**
-     * 创建者昵称
-     */
-    private String userNackname;
-
-    /**
-     * 简介
-     */
-    private String brief;
-
-    /**
-     * 状态
-     */
-    private Integer status;
-
-    /**
-     * 密码
-     */
-    private String password;
-
-    /**
-     * 备用字段2
-     */
-    private String backup2;
-
-    /**
-     * 备注
-     */
-    private String remark;
+    private String content;
 
     /**
      * 逻辑删除

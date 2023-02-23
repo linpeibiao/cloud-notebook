@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaohu.cloud_notebook.mapper.NoteContentMapper">
+
+    <resultMap id="BaseResultMap" type="com.xiaohu.cloud_notebook.model.domain.NoteContent">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="noteId" column="note_id" jdbcType="BIGINT"/>
+            <result property="content" column="content" jdbcType="VARCHAR"/>
+            <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="version" column="version" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,note_id,content,
+        is_deleted,create_time,update_time,
+        version
+    </sql>
+</mapper>

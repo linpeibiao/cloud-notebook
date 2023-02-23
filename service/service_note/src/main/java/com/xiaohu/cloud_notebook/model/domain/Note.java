@@ -70,7 +70,7 @@ public class Note implements Serializable {
     @ApiModelProperty(value = "逻辑删除")
     @TableField(value = "is_deleted", fill = FieldFill.INSERT)
     @TableLogic
-    private Integer deleted;
+    private Integer isDeleted;
 
     /**
      * 创建时间
