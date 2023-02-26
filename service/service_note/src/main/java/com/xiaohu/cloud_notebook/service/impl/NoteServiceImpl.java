@@ -121,8 +121,8 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note>
         if (noteDto == null || noteId == null || noteId < 1){
             throw new BusinessException(ResultCode.PARAMS_ERROR);
         }
-        String lockKey = DISTRIBUTED_LOCK_KEY + noteId;
         // 获取分布式锁
+        String lockKey = DISTRIBUTED_LOCK_KEY + noteId;
         RLock lock = redissonClient.getLock(lockKey);
         try{
             // 等待时间，存活时间，时间单位（等待时间即抢不到锁继续等待抢锁的最大时间，存活时间为-1时会自动开启开门狗机制）
