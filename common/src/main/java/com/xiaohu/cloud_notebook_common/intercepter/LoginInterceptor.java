@@ -6,7 +6,6 @@ import com.xiaohu.cloud_notebook_common.exception.BusinessException;
 import com.xiaohu.cloud_notebook_common.model.domain.User;
 import com.xiaohu.cloud_notebook_common.result.ResultCode;
 import com.xiaohu.cloud_notebook_common.util.UserHolder;
-import io.swagger.models.HttpMethod;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -15,8 +14,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.util.Enumeration;
 import java.util.Map;
 
 import static com.xiaohu.cloud_notebook_common.constant.RedisConstant.LOGIN_USER_KEY;
@@ -25,7 +22,7 @@ import static com.xiaohu.cloud_notebook_common.constant.RedisConstant.LOGIN_USER
 /**
  * @author xiaohu
  * @date 2022/11/19/ 16:55
- * @description
+ * @description 登录拦截器。
  */
 @Component
 @Slf4j

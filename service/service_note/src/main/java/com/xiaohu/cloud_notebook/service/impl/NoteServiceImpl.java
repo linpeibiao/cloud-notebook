@@ -1,4 +1,5 @@
 package com.xiaohu.cloud_notebook.service.impl;
+import java.util.Date;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -6,8 +7,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaohu.cloud_notebook.mapper.NoteMapper;
 import com.xiaohu.cloud_notebook.model.domain.Note;
 import com.xiaohu.cloud_notebook.model.domain.NoteBase;
+import com.xiaohu.cloud_notebook.model.domain.NoteContent;
 import com.xiaohu.cloud_notebook.model.dto.NoteDto;
 import com.xiaohu.cloud_notebook.service.NoteBaseService;
+import com.xiaohu.cloud_notebook.service.NoteContentService;
 import com.xiaohu.cloud_notebook.service.NoteService;
 import com.xiaohu.cloud_notebook_common.exception.BusinessException;
 import com.xiaohu.cloud_notebook_common.model.domain.User;
@@ -19,6 +22,7 @@ import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -37,6 +41,8 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note>
 
     @Autowired
     private NoteBaseService noteBaseService;
+    @Autowired
+    private NoteContentService noteContentService;
 
     /**
      * 引入 redisson 用于获取分布式
@@ -45,6 +51,8 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note>
     private RedissonClient redissonClient;
 
     @Override
+    // TODO 优化事务解决方案
+    @Transactional(rollbackFor = Exception.class)
     public Long addNote(NoteDto noteDto) {
         log.info(Thread.currentThread().getName() + "用户添加笔记");
         if (noteDto == null){
@@ -66,6 +74,7 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note>
 
         // dto 转换成实体对象
         Note note = BeanUtil.copyProperties(noteDto, Note.class);
+        note.setContent("");
 
         // 需要指定创建者和所属知识库
         // 获取登录用户 设置创建者信息
@@ -78,6 +87,10 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note>
         note.setUserId(createdUserId);
         note.setUserNackname(userNackName);
         save(note);
+        NoteContent noteContent = new NoteContent();
+        noteContent.setNoteId(note.getId());
+        noteContent.setContent(noteDto.getContent());
+        noteContentService.save(noteContent);
         return note.getId();
     }
 
@@ -108,8 +121,8 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note>
         if (noteDto == null || noteId == null || noteId < 1){
             throw new BusinessException(ResultCode.PARAMS_ERROR);
         }
-        String lockKey = DISTRIBUTED_LOCK_KEY + noteId;
         // 获取分布式锁
+        String lockKey = DISTRIBUTED_LOCK_KEY + noteId;
         RLock lock = redissonClient.getLock(lockKey);
         try{
             // 等待时间，存活时间，时间单位（等待时间即抢不到锁继续等待抢锁的最大时间，存活时间为-1时会自动开启开门狗机制）

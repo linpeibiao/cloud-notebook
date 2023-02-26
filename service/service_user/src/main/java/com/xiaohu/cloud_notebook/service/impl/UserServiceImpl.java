@@ -53,13 +53,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
     @Override
     public String login(LoginUser loginUser) {
         // 1校验用户post请求中的手机号验证码信息是否为空
         String phone = loginUser.getPhone();
         String code = loginUser.getCode();
         if (StringUtils.isAnyEmpty(phone, code)){
-            throw new BusinessException(ResultCode.PARAMS_ERROR);
+            throw new BusinessException(ResultCode.PARAMS_ERROR, "手机号或验证码为空");
         }
 
         // 2校验用户输入的验证码和缓存中的是否一致
@@ -168,7 +169,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 5. 判断密码账号是否匹配
         // 5.1 判断是否已经设置密码
         if (StringUtils.isEmpty(user.getPassword())){
-            throw new BusinessException(ResultCode.PARAMS_ERROR, "账户未设置密码");
+            throw new BusinessException(ResultCode.PARAMS_ERROR, "账户未设置密码,请使用手机号登陆后设置");
         }
         // 判断是否匹配
         if (!encryptPassword.equals(user.getPassword())){
