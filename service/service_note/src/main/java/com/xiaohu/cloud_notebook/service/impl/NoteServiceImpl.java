@@ -1,17 +1,19 @@
 package com.xiaohu.cloud_notebook.service.impl;
-import java.util.Date;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaohu.cloud_notebook.mapper.NoteMapper;
 import com.xiaohu.cloud_notebook.model.domain.Note;
 import com.xiaohu.cloud_notebook.model.domain.NoteBase;
 import com.xiaohu.cloud_notebook.model.domain.NoteContent;
+import com.xiaohu.cloud_notebook.model.domain.NoteContentHistory;
 import com.xiaohu.cloud_notebook.model.dto.NoteDto;
 import com.xiaohu.cloud_notebook.service.NoteBaseService;
 import com.xiaohu.cloud_notebook.service.NoteContentService;
 import com.xiaohu.cloud_notebook.service.NoteService;
+import com.xiaohu.cloud_notebook.util.MqProvider;
 import com.xiaohu.cloud_notebook_common.exception.BusinessException;
 import com.xiaohu.cloud_notebook_common.model.domain.User;
 import com.xiaohu.cloud_notebook_common.result.ResultCode;
@@ -43,6 +45,8 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note>
     private NoteBaseService noteBaseService;
     @Autowired
     private NoteContentService noteContentService;
+    @Autowired
+    private MqProvider mqProvider;
 
     /**
      * 引入 redisson 用于获取分布式
@@ -74,7 +78,6 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note>
 
         // dto 转换成实体对象
         Note note = BeanUtil.copyProperties(noteDto, Note.class);
-        note.setContent("");
 
         // 需要指定创建者和所属知识库
         // 获取登录用户 设置创建者信息
@@ -86,12 +89,34 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note>
         String userNackName = user.getNackname();
         note.setUserId(createdUserId);
         note.setUserNackname(userNackName);
-        save(note);
+        // 笔记主要信息和正文信息分开保存
         NoteContent noteContent = new NoteContent();
         noteContent.setNoteId(note.getId());
         noteContent.setContent(noteDto.getContent());
+        // 保存在笔记正文表
         noteContentService.save(noteContent);
+        // 保存在笔记表
+        save(note);
+        saveToHistory(note);
         return note.getId();
+    }
+
+    /**
+     * 调用中间件保存在历史笔记正文表
+     * @param note
+     */
+    private void saveToHistory(Note note) {
+        // 需要指定创建者和所属知识库
+        // 获取登录用户 设置创建者信息
+        User user = UserHolder.get();
+        if (user == null){
+            throw new BusinessException(ResultCode.NOT_LOGIN, "未登录");
+        }
+        NoteContentHistory history = new NoteContentHistory();
+        history.setUserId(user.getId());
+        history.setNoteId(note.getId());
+        history.setContent(note.getContent());
+        mqProvider.sendMessage(history);
     }
 
     @Override
@@ -116,6 +141,7 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note>
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean editNode(NoteDto noteDto, Long noteId) {
         // 判空
         if (noteDto == null || noteId == null || noteId < 1){
@@ -134,7 +160,13 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note>
             // 将 dto 转换成 实体类对象
             Note note = BeanUtil.copyProperties(noteDto, Note.class);
             note.setId(noteId);
-            return updateById(note);
+            // 只需要更新正文（自动更新 版本号）
+            noteContentService.update(new UpdateWrapper<NoteContent>()
+                    .eq("note_id", noteId)
+                    .set("content", note.getContent()));
+            // 再将正本保存在历史版本
+            saveToHistory(note);
+            return true;
         }catch (Exception e){
             e.printStackTrace();
         }finally {
