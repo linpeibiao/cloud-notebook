@@ -1,7 +1,5 @@
 package com.xiaohu.cloud_notebook_common.aop;
 
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.xiaohu.cloud_notebook_common.anotation.AuthCheck;
 import com.xiaohu.cloud_notebook_common.constant.UserRole;
 import com.xiaohu.cloud_notebook_common.exception.BusinessException;
@@ -16,7 +14,6 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
