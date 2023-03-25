@@ -3,6 +3,7 @@ import cn.hutool.http.HttpUtil;
 import com.xiaohu.cloud_notebook.constant.NoteEditingStatusEnum;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.xiaohu.cloud_notebook.controller.NoteController;
 import com.xiaohu.cloud_notebook.model.domain.BaseUser;
@@ -60,6 +61,8 @@ public class NoteApplicationTests {
         baseUser.setNoteBaseId(1L);
         baseUser.setUserId(67L);
         baseUserService.save(baseUser);
+        Map<Integer, Integer> map = new HashMap<>();
+        map.keySet();
     }
 
     @Test
