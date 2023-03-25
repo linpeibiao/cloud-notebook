@@ -20,6 +20,7 @@ public class MqConsumer {
     private NoteContentHistoryService noteContentHistoryService;
     /**
      * 注入 接收消息
+     * 监听 注入 接收消息
      */
     public static final String NOTE_QUEUE_NAME = "note.queue";
     @RabbitListener(queues = NOTE_QUEUE_NAME)
